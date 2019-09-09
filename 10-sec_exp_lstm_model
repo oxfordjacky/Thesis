@@ -1,0 +1,14 @@
+from keras.layers import *
+
+def model_lstm(input_shape):
+    inp = Input(shape=(input_shape[1], input_shape[2],))
+    x = Bidirectional(LSTM(hidden_dim, return_sequences=True, recurrent_dropout=0.2))(inp)
+    x = Bidirectional(LSTM(hidden_dim_2, return_sequences=False, recurrent_dropout=0.2, dropout=0.5))(x)
+    x = Dropout(0.5)(x)
+    x = Dense(hidden_dim_3, activation="relu")(x)
+    x = Dropout(0.5)(x)
+    x = Dense(1, activation="sigmoid")(x)
+    model = Model(inputs=inp, outputs=x)
+    model.compile(loss='binary_crossentropy', optimizer='adam', metrics=[matthews_correlation])    
+    return model
+    
